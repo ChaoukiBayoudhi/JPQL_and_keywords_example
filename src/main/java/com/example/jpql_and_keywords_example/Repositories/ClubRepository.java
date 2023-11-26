@@ -2,6 +2,7 @@ package com.example.jpql_and_keywords_example.Repositories;
 
 import com.example.jpql_and_keywords_example.Entities.Club;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,14 +34,22 @@ public interface ClubRepository extends JpaRepository<Club,Long> {
     //@Query("SELECT c FROM Club c JOIN c.games g WHERE g.date BETWEEN :date1 AND :date2 AND g.stadium.capacity>:capacity")
     //List<Club> getClubsByGamesDateBetweenAndGamesStadiumCapacityGreaterThan(@Param("date1") String date1,@Param("date2") String date2,@Param("capacity") Integer capacity);
     //gets clubs that have at least 2 players that have scored more than 10 goals
-    List<Club> getClubsByPlayersGoalsGreaterThanAndPlayersGoalsGreaterThan(Integer goals1,Integer goals2);
+    List<Club> findByPlayersGoalsGreaterThanAndAndPlayersCount(
+            int goals, int playerCount);
     //or using JPQL
-    //@Query("SELECT c FROM Club c JOIN c.players p WHERE p.goals>:goals1 AND p.goals>:goals2")
-    //List<Club> getClubsByPlayersGoalsGreaterThanAndPlayersGoalsGreaterThan(@Param("goals1") Integer goals1,@Param("goals2") Integer goals2);
+//    @Query("SELECT DISTINCT c FROM Club c " +
+//            "JOIN c.players p " +
+//            "WHERE p.goals > 10" +
+//            "GROUP BY c HAVING COUNT(p) >= 2")
+//    List<Club> findClubsWithPlayersHavingMoreThan10Goals();
+
     //gets clubs that have at least 2 players that have scored more than 10 goals and have a position of Forward
-    List<Club> getClubsByPlayersGoalsGreaterThanAndPlayersGoalsGreaterThanAndPlayersPositionEquals(Integer goals1,Integer goals2,String position);
-    //or using JPQL
-    //@Query("SELECT c FROM Club c JOIN c.players p WHERE p.goals>:goals1 AND p.goals>:goals2 AND p.position=:position")
-    //List<Club> getClubsByPlayersGoalsGreaterThanAndPlayersGoalsGreaterThanAndPlayersPositionEquals(@Param("goals1") Integer goals1,@Param("goals2") Integer goals2,@Param("position") String position);
+    List<Club> findByPlayersGoalsGreaterThanAndPlayersPositionAndPlayersCount(
+            int goals, String position, int playerCount);    //or using JPQL
+//    @Query("SELECT DISTINCT c FROM Club c " +
+//            "JOIN c.players p " +
+//            "WHERE p.goals > 10 AND p.position = 'Forward' " +
+//            "GROUP BY c HAVING COUNT(p) >= 2")
+//    List<Club> findClubsWithPlayersHavingMoreThan10GoalsAndForwardPosition();
 
 }
